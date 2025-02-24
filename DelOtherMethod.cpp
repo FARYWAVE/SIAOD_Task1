@@ -14,6 +14,8 @@ private:
 
 public:
     void run() {
+        numberOfTransfers = 0;
+        numberOfComparisons = 0;
         unsigned long long size = originalArray.size();
         auto start = chrono::high_resolution_clock::now();
         int j = 0;
