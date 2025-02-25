@@ -3,7 +3,7 @@
 #include <chrono>
 using namespace std;
 
-class DelFirstMethod {
+class AlgorithmRunner {
     unsigned long long numberOfComparisons = 0;
     unsigned long long numberOfTransfers = 0;
     vector<char> originalArray = {};
@@ -12,27 +12,44 @@ class DelFirstMethod {
     chrono::milliseconds duration = chrono::milliseconds(0);
 
 public:
-    void run() {
+    void runDelOtherMethod() {
         numberOfTransfers = 0;
         numberOfComparisons = 0;
         unsigned long long size = originalArray.size();
         auto start = chrono::high_resolution_clock::now();
+        int j = 0;
         for (int i = 0; i < size; ++i) {
+            ++numberOfComparisons;
+            if (modifiedArray[i] != target) {
+                ++numberOfTransfers;
+                modifiedArray[j++] = modifiedArray[i];
+            }
+        }
+        size = j;
+        modifiedArray.resize(size);
+        auto end = std::chrono::high_resolution_clock::now();
+        duration = chrono::duration_cast<chrono::milliseconds>(end - start);
+    }
+    void runDelFirstMethod() {
+        numberOfTransfers = 0;
+        numberOfComparisons = 0;
+        unsigned long long size = originalArray.size();
+        auto start = chrono::high_resolution_clock::now();
+        int i = 0;
+        while (i < size) {
             ++numberOfComparisons;
             if (modifiedArray[i] == target) {
                 for (int j = i; j < size - 1; ++j) {
                     ++numberOfTransfers;
                     modifiedArray[j] = modifiedArray[j + 1];
                 }
-                --size;
+                size--;
                 modifiedArray.pop_back();
-                return;
-            }
+            } else { i++; }
         }
         auto end = std::chrono::high_resolution_clock::now();
         duration = chrono::duration_cast<chrono::milliseconds>(end - start);
     }
-
 
     void printRateOfDifficulty() const {
         cout << "C: " << numberOfComparisons << '\n';
@@ -44,22 +61,21 @@ public:
         this->target = target;
     }
 
-    void printDuration() const {
-        cout << "Duration: " << duration.count() << "ms\n";
-    }
-
-    void printArray() const {
+    void printArray() {
         for (char i: modifiedArray) {
             cout << i << ", ";
         }
         cout << '\n';
     }
 
+    void printDuration() const {
+        cout << "Duration: " << duration.count() << "ms\n";
+    }
+
     void setArray(const vector<char> &array) {
         originalArray = array;
         modifiedArray = array;
     }
-
     void printReport() const {
         int exampleSizeM;
         if (modifiedArray.size() < 10) {
@@ -84,8 +100,8 @@ public:
         for (int i = 0; i < exampleSizeM; ++i) {
             cout << modifiedArray[i] << ", ";
         }
-        cout << "\n";
-        printRateOfDifficulty();
+        cout << "\nn: " << originalArray.size() << "\n";
         printDuration();
+        printRateOfDifficulty();
     }
 };

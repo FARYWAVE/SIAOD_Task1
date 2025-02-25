@@ -4,7 +4,6 @@
 using namespace std;
 
 class DelOtherMethod {
-private:
     unsigned long long numberOfComparisons = 0;
     unsigned long long numberOfTransfers = 0;
     vector<char> originalArray = {};
